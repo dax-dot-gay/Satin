@@ -21,5 +21,6 @@ fn main() {
     let args = GeneratorArgs::parse();
     let data = normalize_source(args.source);
     let mut generator = Generator::new(data);
-    write("out.json", serde_json::to_string_pretty(&generator.generate()).unwrap()).expect("Failed to write output")
+    let generated = generator.generate();
+    write("out.json", serde_json::to_string_pretty(&generated).unwrap()).expect("Failed to write output")
 }

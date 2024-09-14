@@ -13,7 +13,7 @@ pub use description::{
 };
 pub use research::{ResearchItem, ResearchType};
 use serde::{Deserialize, Serialize};
-pub use utility::{Coercion, IconPath, NormalizedString};
+pub use utility::{Coercion, IconPath, NormalizedString, ClassReference};
 pub use building::{BuildingFuelType, BuildingItem};
 pub use recipe::RecipeItem;
 

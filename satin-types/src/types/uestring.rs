@@ -14,10 +14,14 @@ pub enum UEString {
     Boolean(bool),
     KeyValue(String, Box<UEString>),
     Array(Vec<Box<UEString>>),
+    None
 }
 
 impl UEString {
     pub fn from_string(source: String) -> UEString {
+        if source.len() == 0 {
+            return UEString::None;
+        }
         if source.starts_with("(") && source.ends_with(")") {
             if source.len() == 2 {
                 return UEString::Array(Vec::new());
@@ -104,12 +108,13 @@ impl UEString {
                 }
             }
             UEString::KeyValue(key, val) => json!({key: val.to_value()?}),
+            UEString::None => Value::Null
         })
     }
 }
 
 #[derive(Clone, Debug, PartialEq)]
-pub struct UE<T: Clone + Debug + Serialize + DeserializeOwned + PartialEq>(T);
+pub struct UE<T: Clone + Debug + Serialize + DeserializeOwned + PartialEq>(Option<T>);
 
 impl<T: Clone + Debug + Serialize + DeserializeOwned + PartialEq> Serialize for UE<T> {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
@@ -127,7 +132,7 @@ impl<'de, T: Clone + Debug + Serialize + DeserializeOwned + PartialEq> Deseriali
     {
         let deserialized = Value::deserialize(deserializer)?;
         if let Some(packed) = deserialized.as_str() {
-            Ok(UE(serde_json::from_value::<T>(
+            Ok(UE(serde_json::from_value::<Option<T>>(
                 UEString::from_string(packed.to_string())
                     .to_value()
                     .or_else(|e| Err(serde::de::Error::custom(format!("{e:?}"))))?,
@@ -136,9 +141,15 @@ impl<'de, T: Clone + Debug + Serialize + DeserializeOwned + PartialEq> Deseriali
                 Err(serde::de::Error::custom(format!("{e:?}")))
             })?))
         } else {
-            Ok(UE(serde_json::from_value::<T>(deserialized).or_else(|e| {
+            Ok(UE(serde_json::from_value::<Option<T>>(deserialized).or_else(|e| {
                 Err(serde::de::Error::custom(format!("{e:?}")))
             })?))
         }
+    }
+}
+
+impl<T: Clone + Debug + Serialize + DeserializeOwned + PartialEq> AsRef<Option<T>> for UE<T> {
+    fn as_ref(&self) -> &Option<T> {
+        &self.0
     }
 }

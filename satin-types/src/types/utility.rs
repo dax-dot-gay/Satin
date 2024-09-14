@@ -129,6 +129,21 @@ impl<'de> Deserialize<'de> for IconPath {
     }
 }
 
+impl Into<String> for IconPath {
+    fn into(self) -> String {
+        self.0.or(Some(String::new())).unwrap()
+    }
+}
+
+impl AsRef<str> for IconPath {
+    fn as_ref(&self) -> &str {
+        match &self.0 {
+            Some(v) => v.as_str(),
+            None => ""
+        }
+    }
+}
+
 #[derive(Serialize, Clone, Debug, PartialEq)]
 pub struct NormalizedString(String);
 
@@ -139,5 +154,50 @@ impl<'de> Deserialize<'de> for NormalizedString {
     {
         let raw = String::deserialize(deserializer)?;
         Ok(NormalizedString(raw.to_case(Case::Pascal)))
+    }
+}
+
+impl Into<String> for NormalizedString {
+    fn into(self) -> String {
+        self.0
+    }
+}
+
+impl AsRef<str> for NormalizedString {
+    fn as_ref(&self) -> &str {
+        self.0.as_str()
+    }
+}
+
+#[derive(Serialize, Clone, Debug, PartialEq)]
+pub struct ClassReference(String);
+
+impl<'de> Deserialize<'de> for ClassReference {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        let raw = String::deserialize(deserializer)?;
+        if raw.contains("/") {
+            if let Some((_, name)) = raw.rsplit_once(".") {
+                Ok(ClassReference(name.to_case(Case::Pascal).trim_end_matches("'\"").to_string()))
+            } else {
+                Ok(ClassReference(raw))
+            }
+        } else {
+            Ok(ClassReference(raw))
+        }
+    }
+}
+
+impl Into<String> for ClassReference {
+    fn into(self) -> String {
+        self.0
+    }
+}
+
+impl AsRef<str> for ClassReference {
+    fn as_ref(&self) -> &str {
+        self.0.as_str()
     }
 }
