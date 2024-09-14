@@ -1,5 +1,5 @@
 use convert_case::{Case, Casing};
-use satin_types::{types::DescriptionItem, ResearchItem};
+use satin_types::{types::{BuildingItem, DescriptionItem}, ResearchItem};
 use serde::{Deserialize, Serialize};
 use serde_json::{Map, Value};
 use std::collections::HashMap;
@@ -8,7 +8,7 @@ use std::collections::HashMap;
 pub struct Generated {
     pub research: HashMap<String, ResearchItem>,
     pub descriptions: HashMap<String, DescriptionItem>,
-    pub buildables: HashMap<String, Value>,
+    pub buildables: HashMap<String, BuildingItem>,
     pub recipes: HashMap<String, Value>,
 }
 
@@ -62,9 +62,12 @@ impl Generator {
         }
     }
 
-    fn handle_buildable(&mut self, data: Map<String, Value>) {
-        for (k, v) in data {
-            let _ = self.data.buildables.insert(k, v);
+    fn handle_buildable(&mut self, name: String, data: Value) {
+        let des_result = serde_json::from_value::<BuildingItem>(data.clone());
+        if let Ok(deserialized) = des_result {
+            if !deserialized.display_name.starts_with("Discontinued") {
+                self.data.buildables.insert(name, deserialized);
+            }
         }
     }
 
@@ -114,7 +117,7 @@ impl Generator {
                     "Research" => self.handle_research(cname, class.clone()),
                     "Schematic" => self.handle_research(cname, class.clone()),
                     "Recipe" => self.handle_recipe(raw.clone()),
-                    "Build" => self.handle_buildable(raw.clone()),
+                    "Build" => self.handle_buildable(cname, class.clone()),
                     _ => (),
                 }
             }

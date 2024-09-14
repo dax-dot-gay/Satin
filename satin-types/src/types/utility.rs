@@ -1,3 +1,4 @@
+use convert_case::{Case, Casing};
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Clone, Debug, PartialEq)]
@@ -102,5 +103,18 @@ impl<'de> Deserialize<'de> for IconPath {
         } else {
             Ok(IconPath(None))
         }
+    }
+}
+
+#[derive(Serialize, Clone, Debug, PartialEq)]
+pub struct NormalizedString(String);
+
+impl<'de> Deserialize<'de> for NormalizedString {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        let raw = String::deserialize(deserializer)?;
+        Ok(NormalizedString(raw.to_case(Case::Pascal)))
     }
 }

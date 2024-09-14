@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use super::{Coercion, IconPath};
+use super::{Coercion, IconPath, NormalizedString};
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq)]
 #[serde(rename_all = "snake_case")]
@@ -73,7 +73,7 @@ pub enum DescriptionEquipmentSlot {
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 pub struct DescriptionItem {
     #[serde(alias = "ClassName")]
-    pub id: String,
+    pub id: NormalizedString,
 
     #[serde(alias = "mDisplayName")]
     pub display_name: String,
@@ -100,6 +100,10 @@ pub struct DescriptionItem {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub energy_value: Option<Coercion>,
 
+    #[serde(alias = "mRadioactiveDecay")]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub radioactivity: Option<Coercion>,
+
     #[serde(alias = "mHealthGain")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub health_gain: Option<Coercion>,
@@ -114,5 +118,13 @@ pub struct DescriptionItem {
 
     #[serde(alias = "mEquipmentSlot")]
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub equipment_slot: Option<DescriptionEquipmentSlot>
+    pub equipment_slot: Option<DescriptionEquipmentSlot>,
+
+    #[serde(alias = "mAmountOfWaste")]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub generated_waste: Option<Coercion>,
+
+    #[serde(alias = "mResourceSinkPoints")]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub resource_sink_points: Option<Coercion>,
 }

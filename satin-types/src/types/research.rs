@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
-use super::Coercion;
+use super::{Coercion, NormalizedString};
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 #[serde(rename_all = "snake_case")]
@@ -23,7 +23,7 @@ pub enum ResearchType {
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 pub struct ResearchItem {
     #[serde(alias = "ClassName")]
-    pub id: String,
+    pub id: NormalizedString,
 
     #[serde(alias = "mDisplayName")]
     pub display_name: String,
