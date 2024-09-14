@@ -37,22 +37,31 @@ impl Generator {
     }
 
     fn handle_research(&mut self, data: Map<String, Value>) {
+        for (k, v) in data {
+            let _ = self.data.research.insert(k, v);
+        }
 
     }
 
     fn handle_recipe(&mut self, data: Map<String, Value>) {
-        
+        for (k, v) in data {
+            let _ = self.data.recipes.insert(k, v);
+        }
     }
 
     fn handle_description(&mut self, data: Map<String, Value>) {
-        
+        for (k, v) in data {
+            let _ = self.data.descriptions.insert(k, v);
+        }
     }
 
     fn handle_buildable(&mut self, data: Map<String, Value>) {
-        
+        for (k, v) in data {
+            let _ = self.data.buildables.insert(k, v);
+        }
     }
 
-    pub fn generate(&mut self) {
+    pub fn generate(&mut self) -> Generated {
         for category in self
             .clone()
             .raw
@@ -82,10 +91,11 @@ impl Generator {
                     "BP" => self.handle_description(class.clone()),
                     "Research" => self.handle_research(class.clone()),
                     "Recipe" => self.handle_recipe(class.clone()),
-                    "Buildable" => self.handle_buildable(class.clone()),
+                    "Build" => self.handle_buildable(class.clone()),
                     _ => ()
                 }
             }
         }
+        self.data.clone()
     }
 }

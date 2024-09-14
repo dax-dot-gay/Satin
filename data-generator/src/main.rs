@@ -21,5 +21,5 @@ fn main() {
     let args = GeneratorArgs::parse();
     let data = normalize_source(args.source);
     let mut generator = Generator::new(data);
-    generator.generate();
+    println!("{}", serde_json::to_string_pretty(&generator.generate()).unwrap());
 }
