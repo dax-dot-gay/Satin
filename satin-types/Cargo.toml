@@ -1,0 +1,8 @@
+[package]
+name = "satin-types"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+serde = { version = "1.0.210", features = ["alloc", "derive"] }
+serde_json = { version = "1.0.128", features = ["alloc"] }

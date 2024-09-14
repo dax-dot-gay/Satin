@@ -4,5 +4,13 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+clap = { version = "4.5.17", features = ["derive"] }
+convert_case = "0.6.0"
+prettyplease = "0.2.22"
+proc-macro2 = "1.0.86"
+quote = "1.0.37"
 serde = { version = "1.0.210", features = ["alloc", "derive"] }
 serde_json = { version = "1.0.128", features = ["alloc"] }
+syn = "2.0.77"
+utf16_reader = "0.1.0"
+satin-types = { path = "../satin-types" }
