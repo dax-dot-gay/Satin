@@ -3,6 +3,7 @@ mod research;
 mod utility;
 mod building;
 mod recipe;
+mod uestring;
 
 use std::collections::HashMap;
 

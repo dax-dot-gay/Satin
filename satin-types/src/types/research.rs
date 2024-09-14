@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
-use super::{Coercion, NormalizedString};
+use super::{uestring::UE, Coercion, NormalizedString};
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 #[serde(rename_all = "snake_case")]
@@ -36,7 +36,7 @@ pub struct ResearchItem {
 
     #[serde(alias = "mCost")]
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub cost: Option<String>,
+    pub cost: Option<UE<Value>>,
 
     #[serde(alias = "mUnlocks")]
     #[serde(skip_serializing_if = "Option::is_none")]
