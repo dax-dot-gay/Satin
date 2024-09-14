@@ -1,7 +1,7 @@
 mod cli;
 mod generator;
 
-use std::{fs::File, io::BufReader, path::PathBuf};
+use std::{fs::{write, File}, io::BufReader, path::PathBuf};
 
 use clap::Parser;
 use cli::GeneratorArgs;
@@ -21,5 +21,5 @@ fn main() {
     let args = GeneratorArgs::parse();
     let data = normalize_source(args.source);
     let mut generator = Generator::new(data);
-    println!("{}", serde_json::to_string_pretty(&generator.generate()).unwrap());
+    write("out.json", serde_json::to_string_pretty(&generator.generate()).unwrap()).expect("Failed to write output")
 }

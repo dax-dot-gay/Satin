@@ -1,13 +1,15 @@
-use std::collections::HashMap;
+use convert_case::{Case, Casing};
+use satin_types::{types::DescriptionItem, ResearchItem};
 use serde::{Deserialize, Serialize};
 use serde_json::{Map, Value};
+use std::collections::HashMap;
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct Generated {
-    pub research: HashMap<String, Value>,
-    pub descriptions: HashMap<String, Value>,
+    pub research: HashMap<String, ResearchItem>,
+    pub descriptions: HashMap<String, DescriptionItem>,
     pub buildables: HashMap<String, Value>,
-    pub recipes: HashMap<String, Value>
+    pub recipes: HashMap<String, Value>,
 }
 
 #[derive(Debug, Clone)]
@@ -18,7 +20,7 @@ pub struct Generator {
 
 /*
 Generate data from:
-- Research
+- Research + Schematic
 - Desc + BP
 - Build
 - Recipe
@@ -30,28 +32,33 @@ impl Generator {
                 research: HashMap::new(),
                 recipes: HashMap::new(),
                 descriptions: HashMap::new(),
-                buildables: HashMap::new()
+                buildables: HashMap::new(),
             },
             raw: data.clone(),
         }
     }
 
-    fn handle_research(&mut self, data: Map<String, Value>) {
-        for (k, v) in data {
-            let _ = self.data.research.insert(k, v);
+    fn handle_research(&mut self, name: String, data: Value) {
+        let des_result = serde_json::from_value::<ResearchItem>(data.clone());
+        if let Ok(deserialized) = des_result {
+            if !deserialized.display_name.starts_with("Discontinued") {
+                self.data.research.insert(name, deserialized);
+            }
         }
+    }
 
+    fn handle_description(&mut self, name: String, data: Value) {
+        let des_result = serde_json::from_value::<DescriptionItem>(data.clone());
+        if let Ok(deserialized) = des_result {
+            if !deserialized.display_name.starts_with("Discontinued") {
+                self.data.descriptions.insert(name, deserialized);
+            }
+        }
     }
 
     fn handle_recipe(&mut self, data: Map<String, Value>) {
         for (k, v) in data {
             let _ = self.data.recipes.insert(k, v);
-        }
-    }
-
-    fn handle_description(&mut self, data: Map<String, Value>) {
-        for (k, v) in data {
-            let _ = self.data.descriptions.insert(k, v);
         }
     }
 
@@ -78,21 +85,37 @@ impl Generator {
                 .get("Classes")
                 .expect("Expected Classes key")
                 .as_array()
-                .expect("Expected array of classes")
-                .iter()
-                .map(|v| v.as_object().expect("Expected array of objects").clone())
-                .collect::<Vec<Map<String, Value>>>();
+                .expect("Expected array of classes");
 
-            
             for class in classes {
-                let ctype = class.get("ClassName").expect("Expected ClassName").as_str().expect("Expected string").split_once("_").expect("Expected _").0;
+                let ctype = class
+                    .get("ClassName")
+                    .expect("Expected ClassName")
+                    .as_str()
+                    .expect("Expected string")
+                    .split_once("_")
+                    .expect("Expected _")
+                    .0;
+                let cname = class
+                    .get("ClassName")
+                    .expect("Expected ClassName")
+                    .as_str()
+                    .expect("Expected string")
+                    .to_string()
+                    .to_case(Case::Pascal);
+                let raw = class
+                    .clone()
+                    .as_object()
+                    .expect("Expected sub-object Class")
+                    .clone();
                 match ctype {
-                    "Desc" => self.handle_description(class.clone()),
-                    "BP" => self.handle_description(class.clone()),
-                    "Research" => self.handle_research(class.clone()),
-                    "Recipe" => self.handle_recipe(class.clone()),
-                    "Build" => self.handle_buildable(class.clone()),
-                    _ => ()
+                    "Desc" => self.handle_description(cname, class.clone()),
+                    "BP" => self.handle_description(cname, class.clone()),
+                    "Research" => self.handle_research(cname, class.clone()),
+                    "Schematic" => self.handle_research(cname, class.clone()),
+                    "Recipe" => self.handle_recipe(raw.clone()),
+                    "Build" => self.handle_buildable(raw.clone()),
+                    _ => (),
                 }
             }
         }
