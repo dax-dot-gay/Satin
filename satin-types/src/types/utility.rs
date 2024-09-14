@@ -1,5 +1,6 @@
 use convert_case::{Case, Casing};
 use serde::{Deserialize, Serialize};
+use serde_json::Value;
 
 #[derive(Serialize, Clone, Debug, PartialEq)]
 #[serde(untagged)]
@@ -15,23 +16,40 @@ impl<'de> Deserialize<'de> for Coercion {
     where
         D: serde::Deserializer<'de>,
     {
-        let raw = String::deserialize(deserializer)?;
-        Ok(match raw.as_str() {
-            "True" => Coercion::Boolean(true),
-            "False" => Coercion::Boolean(false),
-            "None" => Coercion::String(None),
-            v => {
-                if let Ok(valid_num) = v.parse::<f64>() {
-                    if valid_num.ceil() == valid_num {
-                        Coercion::Integer(valid_num as i64)
+        let deserialized = Value::deserialize(deserializer)?;
+        if let Some(raw) = deserialized.clone().as_str() {
+            Ok(match raw {
+                "True" => Coercion::Boolean(true),
+                "False" => Coercion::Boolean(false),
+                "None" => Coercion::String(None),
+                v => {
+                    if let Ok(valid_num) = v.parse::<f64>() {
+                        if valid_num.ceil() == valid_num {
+                            Coercion::Integer(valid_num as i64)
+                        } else {
+                            Coercion::Float(valid_num)
+                        }
                     } else {
-                        Coercion::Float(valid_num)
+                        Coercion::String(Some(v.to_string()))
                     }
-                } else {
-                    Coercion::String(Some(v.to_string()))
                 }
+            })
+        } else {
+            match deserialized {
+                Value::Bool(v) => Ok(Coercion::Boolean(v)),
+                Value::Number(v) => if v.is_f64() {
+                    Ok(Coercion::Float(v.as_f64().unwrap()))
+                } else if v.is_i64() {
+                    Ok(Coercion::Integer(v.as_i64().unwrap()))
+                } else {
+                    Ok(Coercion::Integer(v.as_u64().unwrap() as i64))
+                },
+                Value::String(v) => Ok(Coercion::String(Some(v))),
+                Value::Null => Ok(Coercion::String(None)),
+                _ => Ok(Coercion::String(None))
             }
-        })
+        }
+        
     }
 }
 
@@ -94,15 +112,20 @@ impl<'de> Deserialize<'de> for IconPath {
         D: serde::Deserializer<'de>,
     {
         let raw = String::deserialize(deserializer)?;
-        if let Some((_, name)) = raw.rsplit_once(".") {
-            if let Some((unsize, _)) = name.rsplit_once("_") {
-                Ok(IconPath(Some(format!("{unsize}_256"))))
+        if !raw.contains("/") && raw.ends_with("256") {
+            Ok(IconPath(Some(raw)))
+        } else {
+            if let Some((_, name)) = raw.rsplit_once(".") {
+                if let Some((unsize, _)) = name.rsplit_once("_") {
+                    Ok(IconPath(Some(format!("{unsize}_256"))))
+                } else {
+                    Ok(IconPath(None))
+                }
             } else {
                 Ok(IconPath(None))
             }
-        } else {
-            Ok(IconPath(None))
         }
+        
     }
 }
 

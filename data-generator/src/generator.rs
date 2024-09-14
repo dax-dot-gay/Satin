@@ -1,7 +1,7 @@
 use convert_case::{Case, Casing};
-use satin_types::{types::{BuildingItem, DescriptionItem}, ResearchItem};
+use satin_types::{BuildingItem, DescriptionItem, RecipeItem, ResearchItem};
 use serde::{Deserialize, Serialize};
-use serde_json::{Map, Value};
+use serde_json::Value;
 use std::collections::HashMap;
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
@@ -9,7 +9,7 @@ pub struct Generated {
     pub research: HashMap<String, ResearchItem>,
     pub descriptions: HashMap<String, DescriptionItem>,
     pub buildables: HashMap<String, BuildingItem>,
-    pub recipes: HashMap<String, Value>,
+    pub recipes: HashMap<String, RecipeItem>,
 }
 
 #[derive(Debug, Clone)]
@@ -56,9 +56,12 @@ impl Generator {
         }
     }
 
-    fn handle_recipe(&mut self, data: Map<String, Value>) {
-        for (k, v) in data {
-            let _ = self.data.recipes.insert(k, v);
+    fn handle_recipe(&mut self, name: String, data: Value) {
+        let des_result = serde_json::from_value::<RecipeItem>(data.clone());
+        if let Ok(deserialized) = des_result {
+            if !deserialized.display_name.starts_with("Discontinued") {
+                self.data.recipes.insert(name, deserialized);
+            }
         }
     }
 
@@ -106,17 +109,12 @@ impl Generator {
                     .expect("Expected string")
                     .to_string()
                     .to_case(Case::Pascal);
-                let raw = class
-                    .clone()
-                    .as_object()
-                    .expect("Expected sub-object Class")
-                    .clone();
                 match ctype {
                     "Desc" => self.handle_description(cname, class.clone()),
                     "BP" => self.handle_description(cname, class.clone()),
                     "Research" => self.handle_research(cname, class.clone()),
                     "Schematic" => self.handle_research(cname, class.clone()),
-                    "Recipe" => self.handle_recipe(raw.clone()),
+                    "Recipe" => self.handle_recipe(cname, class.clone()),
                     "Build" => self.handle_buildable(cname, class.clone()),
                     _ => (),
                 }
