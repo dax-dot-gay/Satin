@@ -9,7 +9,7 @@ mod tests {
 
     #[test]
     fn test_re_deserialization() {
-        let mut file = File::open("../data-generator/out.json").expect("Test file non-existent");
+        let mut file = File::open("../data-generator/generated/data.json").expect("Test file non-existent");
         let result = serde_json::from_reader::<_, SatinData>(file);
         println!("{result:?}");
         assert!(result.is_ok());

@@ -1,7 +1,7 @@
 mod cli;
 mod generator;
 
-use std::{fs::{write, File}, io::BufReader, path::PathBuf};
+use std::{fs::{create_dir_all, write, File}, io::BufReader, path::PathBuf};
 
 use clap::Parser;
 use cli::GeneratorArgs;
@@ -22,5 +22,11 @@ fn main() {
     let data = normalize_source(args.source);
     let mut generator = Generator::new(data);
     let generated = generator.generate();
-    write("out.json", serde_json::to_string_pretty(&generated).unwrap()).expect("Failed to write output")
+    create_dir_all(args.output.clone()).expect("Failed to create output directory");
+    if args.pretty {
+        write(args.output.clone().join("data.json"), serde_json::to_string_pretty(&generated).expect("Failed to serialize data")).expect("Failed to write to file");
+    } else {
+        write(args.output.clone().join("data.json"), serde_json::to_string(&generated).expect("Failed to serialize data")).expect("Failed to write to file");
+    }
+    
 }

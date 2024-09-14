@@ -44,8 +44,6 @@ impl Generator {
             if !deserialized.display_name.starts_with("Discontinued") {
                 self.data.research.insert(name, deserialized);
             }
-        } else {
-            println!("{des_result:?}");
         }
     }
 

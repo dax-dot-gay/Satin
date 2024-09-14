@@ -1,4 +1,4 @@
 Cargo.lock
 target
 sources
-out.json
+generated

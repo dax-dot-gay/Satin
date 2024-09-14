@@ -180,7 +180,7 @@ impl<'de> Deserialize<'de> for ClassReference {
         let raw = String::deserialize(deserializer)?;
         if raw.contains("/") {
             if let Some((_, name)) = raw.rsplit_once(".") {
-                Ok(ClassReference(name.to_case(Case::Pascal).trim_end_matches("'\"").to_string()))
+                Ok(ClassReference(name.to_case(Case::Pascal).trim_end_matches("'").trim_end_matches("\"").to_string()))
             } else {
                 Ok(ClassReference(raw))
             }

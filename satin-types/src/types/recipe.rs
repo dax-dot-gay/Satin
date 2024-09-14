@@ -1,6 +1,15 @@
 use serde::{Deserialize, Serialize};
 
-use super::{Coercion, NormalizedString};
+use super::{uestring::UE, ClassReference, Coercion, NormalizedString};
+
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
+pub struct ItemReference {
+    #[serde(alias = "ItemClass")]
+    pub item: ClassReference,
+
+    #[serde(alias = "Amount")]
+    pub amount: Coercion
+}
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 pub struct RecipeItem {
@@ -11,15 +20,15 @@ pub struct RecipeItem {
     pub display_name: String,
 
     #[serde(alias = "mIngredients")]
-    pub ingredients: String,
+    pub ingredients: UE<Vec<ItemReference>>,
 
     #[serde(alias = "mProduct")]
-    pub product: String,
+    pub product: UE<Vec<ItemReference>>,
 
     #[serde(alias = "mManufactoringDuration")]
     #[serde(alias = "mManufacturingDuration")]
     pub duration: Coercion,
 
     #[serde(alias = "mProducedIn")]
-    pub machine: String
+    pub machine: UE<Vec<ClassReference>>
 }
