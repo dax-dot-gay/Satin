@@ -115,8 +115,8 @@ impl<'de> Deserialize<'de> for IconPath {
         if !raw.contains("/") && raw.ends_with("256") {
             Ok(IconPath(Some(raw)))
         } else {
-            if let Some((_, name)) = raw.rsplit_once(".") {
-                if let Some((unsize, _)) = name.rsplit_once("_") {
+            if let Some((_, name)) = raw.trim_end_matches("_").rsplit_once(".") {
+                if let Some((unsize, _)) = name.trim_end_matches("_").rsplit_once("_") {
                     Ok(IconPath(Some(format!("{unsize}_256"))))
                 } else {
                     Ok(IconPath(None))

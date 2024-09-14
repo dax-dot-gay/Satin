@@ -12,5 +12,8 @@ pub struct GeneratorArgs {
     pub output: PathBuf,
 
     #[arg(short, long, help = "Whether to pretty-print output JSON", action)]
-    pub pretty: bool
+    pub pretty: bool,
+
+    #[arg(short, long, help = "Whether to download item/building icons", action)]
+    pub icons: bool
 }
