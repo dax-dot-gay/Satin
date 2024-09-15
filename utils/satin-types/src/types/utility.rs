@@ -1,12 +1,13 @@
 use convert_case::{Case, Casing};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
+use specta::Type;
 
-#[derive(Serialize, Clone, Debug, PartialEq)]
+#[derive(Serialize, Clone, Debug, PartialEq, Type)]
 #[serde(untagged)]
 pub enum Coercion {
-    Float(f64),
-    Integer(i64),
+    Float(f32),
+    Integer(i32),
     Boolean(bool),
     String(Option<String>),
 }
@@ -23,9 +24,9 @@ impl<'de> Deserialize<'de> for Coercion {
                 "False" => Coercion::Boolean(false),
                 "None" => Coercion::String(None),
                 v => {
-                    if let Ok(valid_num) = v.parse::<f64>() {
+                    if let Ok(valid_num) = v.parse::<f32>() {
                         if valid_num.ceil() == valid_num {
-                            Coercion::Integer(valid_num as i64)
+                            Coercion::Integer(valid_num as i32)
                         } else {
                             Coercion::Float(valid_num)
                         }
@@ -38,11 +39,11 @@ impl<'de> Deserialize<'de> for Coercion {
             match deserialized {
                 Value::Bool(v) => Ok(Coercion::Boolean(v)),
                 Value::Number(v) => if v.is_f64() {
-                    Ok(Coercion::Float(v.as_f64().unwrap()))
+                    Ok(Coercion::Float(v.as_f64().unwrap() as f32))
                 } else if v.is_i64() {
-                    Ok(Coercion::Integer(v.as_i64().unwrap()))
+                    Ok(Coercion::Integer(v.as_i64().unwrap() as i32))
                 } else {
-                    Ok(Coercion::Integer(v.as_u64().unwrap() as i64))
+                    Ok(Coercion::Integer(v.as_u64().unwrap() as i32))
                 },
                 Value::String(v) => Ok(Coercion::String(Some(v))),
                 Value::Null => Ok(Coercion::String(None)),
@@ -53,8 +54,8 @@ impl<'de> Deserialize<'de> for Coercion {
     }
 }
 
-impl Into<f64> for Coercion {
-    fn into(self) -> f64 {
+impl Into<f32> for Coercion {
+    fn into(self) -> f32 {
         if let Coercion::Float(v) = self {
             v
         } else {
@@ -63,8 +64,8 @@ impl Into<f64> for Coercion {
     }
 }
 
-impl Into<i64> for Coercion {
-    fn into(self) -> i64 {
+impl Into<i32> for Coercion {
+    fn into(self) -> i32 {
         if let Coercion::Integer(v) = self {
             v
         } else {
@@ -103,7 +104,7 @@ impl Into<String> for Coercion {
     }
 }
 
-#[derive(Serialize, Clone, Debug, PartialEq)]
+#[derive(Serialize, Clone, Debug, PartialEq, Type)]
 pub struct IconPath(Option<String>);
 
 impl<'de> Deserialize<'de> for IconPath {
@@ -144,7 +145,7 @@ impl AsRef<str> for IconPath {
     }
 }
 
-#[derive(Serialize, Clone, Debug, PartialEq)]
+#[derive(Serialize, Clone, Debug, PartialEq, Type)]
 pub struct NormalizedString(String);
 
 impl<'de> Deserialize<'de> for NormalizedString {
@@ -169,7 +170,7 @@ impl AsRef<str> for NormalizedString {
     }
 }
 
-#[derive(Serialize, Clone, Debug, PartialEq)]
+#[derive(Serialize, Clone, Debug, PartialEq, Type)]
 pub struct ClassReference(String);
 
 impl<'de> Deserialize<'de> for ClassReference {

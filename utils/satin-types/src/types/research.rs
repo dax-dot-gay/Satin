@@ -1,8 +1,9 @@
 use serde::{Deserialize, Serialize};
+use specta::Type;
 
 use super::{uestring::UE, ClassReference, Coercion, NormalizedString};
 
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Type)]
 pub struct ScannableObject {
     #[serde(alias = "ItemDescriptor")]
     pub item: ClassReference,
@@ -11,7 +12,7 @@ pub struct ScannableObject {
     pub allowed_scanners: Vec<ClassReference>
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Type)]
 #[serde(tag = "Class")]
 #[serde(rename_all = "snake_case")]
 #[serde(rename_all_fields = "snake_case")]
@@ -88,7 +89,7 @@ pub enum ResearchUnlock {
     Map {},
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Type)]
 #[serde(rename_all = "snake_case")]
 pub enum ResearchType {
     #[serde(alias = "EST_MAM")]
@@ -105,7 +106,7 @@ pub enum ResearchType {
     ResourceSink
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Type)]
 pub struct ResearchItemCost {
     #[serde(alias = "ItemClass")]
     pub item: ClassReference,
@@ -114,7 +115,7 @@ pub struct ResearchItemCost {
     pub amount: Coercion,
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Type)]
 pub struct ResearchItem {
     #[serde(alias = "ClassName")]
     pub id: NormalizedString,

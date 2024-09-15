@@ -5,7 +5,24 @@
 
 
 export const commands = {
-
+async getData() : Promise<SatinData> {
+    return await TAURI_INVOKE("get_data");
+},
+async getResearch() : Promise<{ [key in string]: ResearchItem }> {
+    return await TAURI_INVOKE("get_research");
+},
+async getDescriptions() : Promise<{ [key in string]: DescriptionItem }> {
+    return await TAURI_INVOKE("get_descriptions");
+},
+async getBuildables() : Promise<{ [key in string]: BuildingItem }> {
+    return await TAURI_INVOKE("get_buildables");
+},
+async getRecipes() : Promise<{ [key in string]: RecipeItem }> {
+    return await TAURI_INVOKE("get_recipes");
+},
+async getItem(id: string) : Promise<SatinItem | null> {
+    return await TAURI_INVOKE("get_item", { id });
+}
 }
 
 /** user-defined events **/
@@ -18,7 +35,27 @@ export const commands = {
 
 /** user-defined types **/
 
-
+export type BuildingFuelType = { primary_resource: NormalizedString; secondary_resource?: NormalizedString | null; byproduct_resource?: NormalizedString | null; byproduct_amount?: Coercion | null }
+export type BuildingItem = { id: NormalizedString; display_name: string; description: string; adaptive_generator?: Coercion | null; fuels?: BuildingFuelType[] | null; power_production?: Coercion | null; power_consumption?: Coercion | null; power_consumption_exponent?: Coercion | null; power_consumption_boost?: Coercion | null; power_consumption_minimum?: Coercion | null; power_consumption_maximum?: Coercion | null; overclockable?: Coercion | null; boostable?: Coercion | null; sinkable?: Coercion | null; can_pattern?: Coercion | null; can_color?: Coercion | null; interactable?: Coercion | null }
+export type ClassReference = string
+export type Coercion = number | boolean | string | null
+export type DescriptionEquipmentSlot = "arms" | "back" | "legs" | "head" | "body"
+export type DescriptionGasType = "normal" | "energy"
+export type DescriptionItem = { id: NormalizedString; display_name: string; description: string; description_type: DescriptionType; stack_size?: DescriptionStackSize | null; gas_type?: DescriptionGasType | null; is_alien?: Coercion | null; energy_value?: Coercion | null; radioactivity?: Coercion | null; health_gain?: Coercion | null; power_consumption?: Coercion | null; icon?: IconPath | null; equipment_slot?: DescriptionEquipmentSlot | null; generated_waste?: Coercion | null; resource_sink_points?: Coercion | null }
+export type DescriptionStackSize = "liquid" | "one" | "small" | "medium" | "large" | "huge"
+export type DescriptionType = "liquid" | "item" | "gas" | "building"
+export type IconPath = string | null
+export type ItemReference = { item: ClassReference; amount: Coercion }
+export type NormalizedString = string
+export type RecipeItem = { id: NormalizedString; display_name: string; ingredients: UE<ItemReference[]>; product: UE<ItemReference[]>; duration: Coercion; machine: UE<ClassReference[]> }
+export type ResearchItem = { id: NormalizedString; display_name: string; description: string; research_type: ResearchType; cost?: UE<ResearchItemCost[]> | null; unlocks?: ResearchUnlock[] | null; sub_categories?: UE<ClassReference[]> | null; tier?: Coercion | null }
+export type ResearchItemCost = { item: ClassReference; amount: Coercion }
+export type ResearchType = "mam_research" | "milestone" | "alternate_recipe" | "resource_sink"
+export type ResearchUnlock = { Class: "recipe"; recipes: UE<ClassReference[]> } | { Class: "blueprints"; recipes: UE<ClassReference[]> } | { Class: "schematic"; schematics: UE<ClassReference[]> } | { Class: "scannable_resource"; resources: UE<ClassReference[]> } | { Class: "scannable_object"; resources: UE<ScannableObject[]> } | { Class: "inventory_slot"; resources: Coercion } | { Class: "info" } | { Class: "boombox_tape"; tapes: UE<ClassReference[]> } | { Class: "tool_slot"; amount: Coercion } | { Class: "emote"; emotes: UE<ClassReference[]> } | { Class: "production_boost" } | { Class: "central_storage_upload"; amount: Coercion } | { Class: "build_efficiency" } | { Class: "central_storage_items"; amount: Coercion } | { Class: "central_storage_slots"; amount: Coercion } | { Class: "overclocking" } | { Class: "map" }
+export type SatinData = { research: { [key in string]: ResearchItem }; descriptions: { [key in string]: DescriptionItem }; buildables: { [key in string]: BuildingItem }; recipes: { [key in string]: RecipeItem } }
+export type SatinItem = ({ item_type: "research" } & ResearchItem) | ({ item_type: "description" } & DescriptionItem) | ({ item_type: "buildable" } & BuildingItem) | ({ item_type: "recipe" } & RecipeItem)
+export type ScannableObject = { item: ClassReference; allowed_scanners: ClassReference[] }
+export type UE<T> = T | null
 
 /** tauri-specta globals **/
 

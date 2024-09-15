@@ -7,3 +7,5 @@ edition = "2021"
 convert_case = "0.6.0"
 serde = { version = "1.0.210", features = ["alloc", "derive"] }
 serde_json = { version = "1.0.128", features = ["alloc"] }
+specta = { version = "=2.0.0-rc.20", features = ["serde", "serde_json", "uuid"] }
+tauri-specta = { version = "=2.0.0-rc.19", features = ["derive", "typescript"] }

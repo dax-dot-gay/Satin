@@ -1,8 +1,9 @@
 use serde::{Deserialize, Serialize};
+use specta::Type;
 
 use super::{Coercion, IconPath, NormalizedString};
 
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq, Type)]
 #[serde(rename_all = "snake_case")]
 pub enum DescriptionType {
     #[serde(alias = "RF_LIQUID")]
@@ -18,7 +19,7 @@ pub enum DescriptionType {
     Building,
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq, Type)]
 #[serde(rename_all = "snake_case")]
 pub enum DescriptionStackSize {
     #[serde(alias = "SS_FLUID")] // Liquid (no stack)
@@ -41,7 +42,7 @@ pub enum DescriptionStackSize {
     Huge,
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq, Type)]
 #[serde(rename_all = "snake_case")]
 pub enum DescriptionGasType {
     #[serde(alias = "GT_NORMAL")] // Normal or N/A
@@ -51,7 +52,7 @@ pub enum DescriptionGasType {
     Energy
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq, Type)]
 #[serde(rename_all = "snake_case")]
 pub enum DescriptionEquipmentSlot {
     #[serde(alias = "ES_ARMS")]
@@ -70,7 +71,7 @@ pub enum DescriptionEquipmentSlot {
     Body,
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Type)]
 pub struct DescriptionItem {
     #[serde(alias = "ClassName")]
     pub id: NormalizedString,

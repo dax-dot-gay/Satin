@@ -1,8 +1,9 @@
 use serde::{Deserialize, Serialize};
+use specta::Type;
 
 use super::{Coercion, NormalizedString};
 
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Type)]
 pub struct BuildingFuelType {
     #[serde(alias = "mFuelClass")]
     pub primary_resource: NormalizedString,
@@ -20,7 +21,7 @@ pub struct BuildingFuelType {
     pub byproduct_amount: Option<Coercion>,
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Type)]
 pub struct BuildingItem {
     #[serde(alias = "ClassName")]
     pub id: NormalizedString,

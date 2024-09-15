@@ -6,6 +6,7 @@ use serde::{
     Deserialize, Serialize,
 };
 use serde_json::{json, Value};
+use specta::Type;
 
 #[derive(Clone, Debug)]
 pub enum UEString {
@@ -113,7 +114,7 @@ impl UEString {
     }
 }
 
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Type)]
 pub struct UE<T: Clone + Debug + Serialize + DeserializeOwned + PartialEq>(Option<T>);
 
 impl<T: Clone + Debug + Serialize + DeserializeOwned + PartialEq> Serialize for UE<T> {

@@ -3195,6 +3195,8 @@ dependencies = [
  "convert_case 0.6.0",
  "serde",
  "serde_json",
+ "specta",
+ "tauri-specta",
 ]
 
 [[package]]

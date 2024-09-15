@@ -1,8 +1,9 @@
 use serde::{Deserialize, Serialize};
+use specta::Type;
 
 use super::{uestring::UE, ClassReference, Coercion, NormalizedString};
 
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Type)]
 pub struct ItemReference {
     #[serde(alias = "ItemClass")]
     pub item: ClassReference,
@@ -11,7 +12,7 @@ pub struct ItemReference {
     pub amount: Coercion
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Type)]
 pub struct RecipeItem {
     #[serde(alias = "ClassName")]
     pub id: NormalizedString,
