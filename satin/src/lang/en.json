@@ -1,1 +1,12 @@
-{}
+{
+  "common": {
+    "appName": "Satin"
+  },
+  "views": {
+    "layout": {
+      "nav": {
+        "addFactory": "New Factory"
+      }
+    }
+  }
+}

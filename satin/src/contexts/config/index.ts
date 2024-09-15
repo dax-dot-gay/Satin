@@ -36,7 +36,10 @@ export function useConfig<T extends keyof ConfigKeys>(
     const setValue = useCallback(
         (value: ConfigKeys[T]) => {
             setCurrent(value);
-            store.set(key, value).then(() => emit("satin://fr/config-updated"));
+            store.set(key, value).then(() => {
+                emit("satin://fr/config-updated");
+                store.save();
+            });
         },
         [store, setCurrent]
     );

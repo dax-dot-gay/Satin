@@ -15,6 +15,7 @@ export const theme = createTheme({
             "#ad4800",
         ],
     },
-    primaryShade: { dark: 6, light: 4 },
+    primaryShade: { dark: 7, light: 4 },
     primaryColor: "primary",
+    headings: { fontFamily: "Ubuntu-Regular" },
 });

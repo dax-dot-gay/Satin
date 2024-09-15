@@ -1,0 +1,20 @@
+@font-face {
+    font-family: "Ubuntu-Regular";
+    src: url(../assets/fonts/ubuntu-mono/UbuntuMono-Regular.ttf);
+}
+
+:root {
+    &[data-mantine-color-scheme="dark"] {
+        --mantine-color-body: rgb(20, 20, 20) !important;
+        --mantine-color-default-hover: rgb(30,30,30) !important;
+    }
+
+    &[data-mantine-color-scheme="light"] {
+        --mantine-color-default-hover: rgb(240, 240, 240) !important;
+    }
+  
+}
+
+.paper-light {
+    background-color: var(--mantine-color-default-hover) !important;
+}
