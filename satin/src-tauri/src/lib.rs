@@ -9,12 +9,18 @@ use tauri_specta::{collect_commands, collect_events, Builder};
 
 use commands::*;
 
-
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     let builder = Builder::<tauri::Wry>::new()
         // Then register them (separated by a comma)
-        .commands(collect_commands![get_data, get_research, get_descriptions, get_buildables, get_recipes, get_item])
+        .commands(collect_commands![
+            get_data,
+            get_research,
+            get_descriptions,
+            get_buildables,
+            get_recipes,
+            get_item
+        ])
         .events(collect_events![])
         .typ::<SatinData>()
         .typ::<SatinItem>();
@@ -24,6 +30,7 @@ pub fn run() {
         .export(Typescript::default(), "../src/types/backend/specta.ts")
         .expect("Failed to export typescript bindings");
     tauri::Builder::default()
+        .plugin(tauri_plugin_store::Builder::new().build())
         .invoke_handler(builder.invoke_handler())
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_dialog::init())
@@ -33,7 +40,9 @@ pub fn run() {
             builder.mount_events(app);
 
             // Load data
-            let datapath = app.path().resolve("data/data.json", BaseDirectory::Resource)?;
+            let datapath = app
+                .path()
+                .resolve("data/data.json", BaseDirectory::Resource)?;
             let datafile = File::open(datapath)?;
             let parsed = serde_json::from_reader::<_, SatinData>(datafile)?;
             app.manage(parsed);

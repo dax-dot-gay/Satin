@@ -1,3 +1,13 @@
 {
-    "rust-analyzer.linkedProjects": ["utils/Cargo.toml", "satin/Cargo.toml"]
+    "rust-analyzer.linkedProjects": ["utils/Cargo.toml", "satin/Cargo.toml"],
+    "cssVariables.lookupFiles": [
+        "**/*.css",
+        "**/*.scss",
+        "**/*.sass",
+        "**/*.less",
+        "satin/node_modules/@mantine/core/styles.css"
+    ],
+    "i18n-ally.enabledFrameworks": ["react-i18next"],
+    "i18n-ally.localesPaths": ["satin/src/lang"],
+    "i18n-ally.enabledParsers": ["json"]
 }

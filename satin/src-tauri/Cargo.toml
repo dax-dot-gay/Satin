@@ -27,4 +27,5 @@ specta = { version = "=2.0.0-rc.20", features = ["serde", "serde_json", "uuid"] 
 uuid = { version = "1.10.0", features = ["fast-rng", "serde", "v4"] }
 specta-typescript = "0.0.7"
 tauri-specta = { version = "=2.0.0-rc.19", features = ["derive", "typescript"] }
+tauri-plugin-store = "2.0.0-rc"
 

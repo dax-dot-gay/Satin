@@ -1,32 +1,35 @@
 {
-    "$schema": "../gen/schemas/desktop-schema.json",
-    "identifier": "default",
-    "description": "Capability for the main window",
-    "windows": ["main"],
-    "permissions": [
-        "core:path:default",
-        "core:event:default",
-        "core:window:default",
-        "core:app:default",
-        "core:resources:default",
-        "core:menu:default",
-        "core:tray:default",
-        "core:window:allow-set-title",
-        "dialog:default",
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "Capability for the main window",
+  "windows": [
+    "main"
+  ],
+  "permissions": [
+    "core:path:default",
+    "core:event:default",
+    "core:window:default",
+    "core:app:default",
+    "core:resources:default",
+    "core:menu:default",
+    "core:tray:default",
+    "core:window:allow-set-title",
+    "dialog:default",
+    {
+      "identifier": "fs:default",
+      "allow": [
         {
-            "identifier": "fs:default",
-            "allow": [
-                {
-                    "path": "$RESOURCE/*"
-                },
-                {
-                    "path": "$APPDATA/*"
-                },
-                {
-                    "path": "$APPCONFIG/*"
-                }
-            ]
+          "path": "$RESOURCE/*"
         },
-        "polodb:default"
-    ]
+        {
+          "path": "$APPDATA/*"
+        },
+        {
+          "path": "$APPCONFIG/*"
+        }
+      ]
+    },
+    "polodb:default",
+    "store:default"
+  ]
 }
