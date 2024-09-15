@@ -33,10 +33,5 @@
         "resources": {
             "resources/generated/*.json": "resources/data/"
         }
-    },
-    "plugins": {
-        "fs": {
-            "scope": ["$RESOURCE/*", "$APPCONFIG/*", "$APPDATA"]
-        }
     }
 }

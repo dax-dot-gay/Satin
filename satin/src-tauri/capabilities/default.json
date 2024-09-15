@@ -4,9 +4,29 @@
     "description": "Capability for the main window",
     "windows": ["main"],
     "permissions": [
-        "core:default",
+        "core:path:default",
+        "core:event:default",
+        "core:window:default",
+        "core:app:default",
+        "core:resources:default",
+        "core:menu:default",
+        "core:tray:default",
+        "core:window:allow-set-title",
         "dialog:default",
-        "fs:default",
+        {
+            "identifier": "fs:default",
+            "allow": [
+                {
+                    "path": "$RESOURCE/*"
+                },
+                {
+                    "path": "$APPDATA/*"
+                },
+                {
+                    "path": "$APPCONFIG/*"
+                }
+            ]
+        },
         "polodb:default"
     ]
 }

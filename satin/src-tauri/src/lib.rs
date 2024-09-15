@@ -8,6 +8,11 @@ pub fn run() {
         // Then register them (separated by a comma)
         .commands(collect_commands![])
         .events(collect_events![]);
+
+    #[cfg(debug_assertions)] // <- Only export on non-release builds
+    builder
+        .export(Typescript::default(), "../src/types/backend/specta.ts")
+        .expect("Failed to export typescript bindings");
     tauri::Builder::default()
         .invoke_handler(builder.invoke_handler())
         .plugin(tauri_plugin_fs::init())
