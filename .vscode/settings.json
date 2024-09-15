@@ -1,3 +1,7 @@
 {
-  "rust-analyzer.linkedProjects": ["data-generator/Cargo.toml"]
+  "rust-analyzer.linkedProjects": [
+    "data-generator/Cargo.toml",
+    "satin-types/Cargo.toml",
+    "satin/src-tauri/Cargo.toml"
+  ]
 }
