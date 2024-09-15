@@ -30,9 +30,8 @@
       "icons/icon.icns",
       "icons/icon.ico"
     ],
-    "resources": [
-      "resources/generated/data.json",
-      "resources/generated/assets/*"
-    ]
+    "resources": {
+      "resources/generated/*.json": "resources/data/"
+    }
   }
 }
