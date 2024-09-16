@@ -19,14 +19,28 @@ import {
     IconSunFilled,
 } from "@tabler/icons-react";
 import { useTranslation } from "react-i18next";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { useReady } from "../../contexts/readyState";
 
 export function AppLayout() {
+    const ready = useReady();
+    const nav = useNavigate();
+    const location = useLocation();
     const [colorScheme, setColorScheme] = useConfig("colorScheme");
     const [currentProject, setCurrentProject] = useConfig("currentProject");
     const csHook = useMantineColorScheme();
     const currentScheme = useComputedColorScheme("dark");
     const { t } = useTranslation();
+
+    useEffect(() => {
+        if (
+            ready &&
+            currentProject === null &&
+            location.pathname !== "/no-project"
+        ) {
+            nav("/no-project");
+        }
+    }, [ready, currentProject?.path, location.pathname]);
 
     useEffect(() => {
         csHook.setColorScheme(colorScheme ?? "auto");

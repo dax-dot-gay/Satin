@@ -5,15 +5,18 @@ import { ConfigProvider } from "./contexts/config";
 import { RouterProvider } from "react-router-dom";
 import { appRouter } from "./util/routes";
 import "./styles/index.scss";
+import { ReadinessProvider } from "./contexts/readyState";
 
 export function App() {
     return (
-        <Localization>
-            <ConfigProvider>
-                <MantineProvider theme={theme} defaultColorScheme="dark">
-                    <RouterProvider router={appRouter} />
-                </MantineProvider>
-            </ConfigProvider>
-        </Localization>
+        <ReadinessProvider>
+            <Localization>
+                <ConfigProvider>
+                    <MantineProvider theme={theme} defaultColorScheme="dark">
+                        <RouterProvider router={appRouter} />
+                    </MantineProvider>
+                </ConfigProvider>
+            </Localization>
+        </ReadinessProvider>
     );
 }
