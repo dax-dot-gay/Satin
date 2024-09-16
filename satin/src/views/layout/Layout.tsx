@@ -19,9 +19,11 @@ import {
     IconSunFilled,
 } from "@tabler/icons-react";
 import { useTranslation } from "react-i18next";
+import { Outlet } from "react-router-dom";
 
 export function AppLayout() {
-    const [colorScheme, setColorScheme] = useConfig("colorScheme", "dark");
+    const [colorScheme, setColorScheme] = useConfig("colorScheme");
+    const [currentProject, setCurrentProject] = useConfig("currentProject");
     const csHook = useMantineColorScheme();
     const currentScheme = useComputedColorScheme("dark");
     const { t } = useTranslation();
@@ -88,7 +90,9 @@ export function AppLayout() {
                 </Stack>
             </AppShell.Navbar>
 
-            <AppShell.Main>Main</AppShell.Main>
+            <AppShell.Main>
+                <Outlet />
+            </AppShell.Main>
         </AppShell>
     );
 }

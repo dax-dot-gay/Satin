@@ -1,22 +1,21 @@
 import { useCallback, useContext, useEffect, useState } from "react";
 import { ConfigProvider } from "./provider";
-import { ConfigContext, ConfigKeys } from "./type";
+import { ConfigContext, ConfigKeys, DefaultConfig } from "./type";
 import { emit, listen, UnlistenFn } from "@tauri-apps/api/event";
 export { ConfigProvider };
 
 export function useConfig<T extends keyof ConfigKeys>(
-    key: T,
-    default_value?: ConfigKeys[T]
+    key: T
 ): [ConfigKeys[T] | null, (value: ConfigKeys[T]) => void] {
     const { store } = useContext(ConfigContext);
     const [current, setCurrent] = useState<ConfigKeys[T] | null>(
-        default_value ?? null
+        DefaultConfig[key]
     );
 
     useEffect(() => {
         store
             .get<ConfigKeys[T]>(key)
-            .then((v) => setCurrent(v ?? default_value ?? null));
+            .then((v) => setCurrent(v ?? DefaultConfig[key]));
     }, [store]);
 
     useEffect(() => {
@@ -24,7 +23,7 @@ export function useConfig<T extends keyof ConfigKeys>(
         listen<void>("satin://fr/config-updated", () =>
             store
                 .get<ConfigKeys[T]>(key)
-                .then((v) => setCurrent(v ?? default_value ?? null))
+                .then((v) => setCurrent(v ?? DefaultConfig[key]))
         ).then((f) => (unlisten = f));
         return () => {
             if (unlisten) {
