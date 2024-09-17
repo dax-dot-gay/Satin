@@ -19,7 +19,7 @@ import {
     IconX,
 } from "@tabler/icons-react";
 import { open } from "@tauri-apps/plugin-dialog";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { Database } from "tauri-plugin-polodb-api";
 import { v4 } from "uuid";
 import { Project } from "../types/project";
@@ -42,6 +42,7 @@ export function CreateProjectModal({ context, id }: ContextModalProps<{}>) {
     });
     const nav = useNavigate();
     const setCurrentProject = useSetConfig("currentProject");
+    const [loading, setLoading] = useState(false);
 
     const createProject = useCallback(
         async (values: { name: string; description: string; path: string }) => {
@@ -167,11 +168,13 @@ export function CreateProjectModal({ context, id }: ContextModalProps<{}>) {
                 <Button
                     leftSection={<IconPlus size={20} />}
                     justify="space-between"
+                    loading={loading}
                     disabled={
                         form.values.name.length === 0 ||
                         form.values.path.length === 0
                     }
                     onClick={() => {
+                        setLoading(true);
                         createProject(form.values).then((result) => {
                             if (result) {
                                 setCurrentProject(result).then(() => {
@@ -179,6 +182,7 @@ export function CreateProjectModal({ context, id }: ContextModalProps<{}>) {
                                     nav("/");
                                 });
                             }
+                            setLoading(false);
                         });
                     }}
                 >
