@@ -21,7 +21,7 @@ export function ConfigProvider({
         }
         setDefaults();
         return store;
-    }, []);
+    }, [setReady]);
 
     return (
         <ConfigContext.Provider value={{ store }}>

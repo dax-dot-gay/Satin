@@ -33,6 +33,7 @@ export function AppLayout() {
     const { t } = useTranslation();
 
     useEffect(() => {
+        console.log(ready, currentProject);
         if (
             ready &&
             currentProject === null &&
@@ -48,7 +49,14 @@ export function AppLayout() {
 
     return (
         <AppShell
-            navbar={{ width: { sm: 256 }, breakpoint: "sm" }}
+            navbar={{
+                width: { sm: 256 },
+                breakpoint: "sm",
+                collapsed: {
+                    desktop: location.pathname === "/no-project",
+                    mobile: location.pathname === "/no-project",
+                },
+            }}
             padding="sm"
         >
             <AppShell.Navbar p="xs">
