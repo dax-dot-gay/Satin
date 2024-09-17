@@ -1,0 +1,24 @@
+.new-project-menu {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: fit-content;
+    width: 90vw;
+    max-width: 256px;
+}
+
+.new-project-root {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    display: inline-block;
+    height: 100vh;
+    width: 100vw;
+
+    .new-project-theme-switch {
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
+}
+}

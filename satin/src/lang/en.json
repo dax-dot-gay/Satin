@@ -1,11 +1,20 @@
 {
   "common": {
-    "appName": "Satin"
+    "appName": "Satin",
+    "appDescription": "Satisfactory Planner"
   },
   "views": {
     "layout": {
       "nav": {
         "addFactory": "New Factory"
+      }
+    },
+    "blank": {
+      "createProject": {
+        "button": "New Project"
+      },
+      "openProject": {
+        "button": "Open Existing"
       }
     }
   }
