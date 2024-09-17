@@ -85,17 +85,11 @@ export function AppLayout() {
                             leftSection={<IconPlus size={20} />}
                             style={{ flexGrow: 1 }}
                             justify="space-between"
-                            variant={
-                                currentScheme === "dark" ? "light" : "filled"
-                            }
                         >
                             {t("views.layout.nav.addFactory")}
                         </Button>
                         <ActionIcon
                             size="36px"
-                            variant={
-                                currentScheme === "dark" ? "light" : "filled"
-                            }
                             onClick={() =>
                                 setColorScheme(
                                     currentScheme === "dark" ? "light" : "dark"

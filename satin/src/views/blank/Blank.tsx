@@ -27,7 +27,7 @@ export function BlankView() {
             <ActionIcon
                 className="new-project-theme-switch"
                 size="36px"
-                variant={scheme === "dark" ? "light" : "filled"}
+                variant="light"
                 onClick={() =>
                     setColorScheme(scheme === "dark" ? "light" : "dark")
                 }
