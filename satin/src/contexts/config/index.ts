@@ -45,3 +45,20 @@ export function useConfig<T extends keyof ConfigKeys>(
 
     return [current, setValue];
 }
+
+export function useSetConfig<T extends keyof ConfigKeys>(
+    key: T
+): (value: ConfigKeys[T]) => Promise<void> {
+    const { store } = useContext(ConfigContext);
+
+    const setConfig = useCallback(
+        async (value: ConfigKeys[T]) => {
+            await store.set(key, value);
+            await emit("satin://fr/config-updated");
+            await store.save();
+        },
+        [store, key]
+    );
+
+    return setConfig;
+}

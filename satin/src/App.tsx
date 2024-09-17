@@ -6,6 +6,7 @@ import { RouterProvider } from "react-router-dom";
 import { appRouter } from "./util/routes";
 import "./styles/index.scss";
 import { ReadinessProvider } from "./contexts/readyState";
+import { Notifications } from "@mantine/notifications";
 
 export function App() {
     return (
@@ -13,6 +14,7 @@ export function App() {
             <Localization>
                 <ConfigProvider>
                     <MantineProvider theme={theme} defaultColorScheme="dark">
+                        <Notifications />
                         <RouterProvider router={appRouter} />
                     </MantineProvider>
                 </ConfigProvider>

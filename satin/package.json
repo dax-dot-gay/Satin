@@ -19,6 +19,7 @@
     "@mantine/form": "^7.12.2",
     "@mantine/hooks": "^7.12.2",
     "@mantine/modals": "^7.12.2",
+    "@mantine/notifications": "^7.12.2",
     "@mantine/spotlight": "^7.12.2",
     "@tabler/icons-react": "^3.17.0",
     "@tauri-apps/api": ">=2.0.0-rc.0",
@@ -35,13 +36,15 @@
     "react-router-dom": "^6.26.2",
     "react-zoom-pan-pinch": "^3.6.1",
     "recharts": "2",
-    "tauri-plugin-polodb-api": "^0.1.0"
+    "tauri-plugin-polodb-api": "^0.1.0",
+    "uuid": "^10.0.0"
   },
   "devDependencies": {
     "@tauri-apps/cli": ">=2.0.0-rc.0",
     "@types/lodash": "^4.17.7",
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
+    "@types/uuid": "^10.0.0",
     "@vitejs/plugin-react": "^4.2.1",
     "postcss": "^8.4.47",
     "postcss-preset-mantine": "^1.17.0",

@@ -17,6 +17,7 @@ import {
 } from "@tabler/icons-react";
 import { useTranslation } from "react-i18next";
 import { useConfig } from "../../contexts/config";
+import { openContextModal } from "@mantine/modals";
 
 export function BlankView() {
     const { t } = useTranslation();
@@ -54,6 +55,20 @@ export function BlankView() {
                     px="sm"
                     size="md"
                     leftSection={<IconMapPlus />}
+                    onClick={() =>
+                        openContextModal({
+                            modal: "createProject",
+                            innerProps: {},
+                            title: (
+                                <Group gap="sm">
+                                    <IconMapPlus />
+                                    <Title order={3}>
+                                        {t("modals.createProject.title")}
+                                    </Title>
+                                </Group>
+                            ),
+                        })
+                    }
                 >
                     {t("views.blank.createProject.button")}
                 </Button>

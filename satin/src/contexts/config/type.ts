@@ -4,8 +4,10 @@ import { createContext } from "react";
 export type ConfigKeys = {
     colorScheme: "light" | "dark";
     currentProject: {
+        id: string;
         name: string;
         path: string;
+        description: string;
     } | null;
 };
 

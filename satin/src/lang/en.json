@@ -17,5 +17,35 @@
         "button": "Open Existing"
       }
     }
+  },
+  "modals": {
+    "createProject": {
+      "name": {
+        "label": "Project Name",
+        "placeholder": "Lovelace Industries"
+      },
+      "title": "New Project",
+      "description": {
+        "label": "Project Description",
+        "placeholder": "Grind. Optimize. Automate. Thrive."
+      },
+      "path": {
+        "label": "Project Path",
+        "placeholder": "/hub/toilet",
+        "dialog": "Select Project Path",
+        "description": "Project folder will be placed inside the selected folder"
+      },
+      "error": "Unable to create project.",
+      "existsError": "The named project already exists at that path.",
+      "success": "Created project!"
+    }
+  },
+  "actions": {
+    "cancel": "Cancel",
+    "create": "Create"
+  },
+  "notif": {
+    "error": "Error",
+    "success": "Success!"
   }
 }
