@@ -6,6 +6,7 @@ import {
     Group,
     Paper,
     Stack,
+    Text,
     Title,
     useComputedColorScheme,
     useMantineColorScheme,
@@ -14,6 +15,7 @@ import { useConfig } from "../../contexts/config";
 import { useEffect } from "react";
 import {
     IconBuildingFactory2,
+    IconMap,
     IconMoonFilled,
     IconPlus,
     IconSunFilled,
@@ -77,6 +79,15 @@ export function AppLayout() {
                                 <Title order={4}>{t("common.appName")}</Title>
                             </Group>
                         </Paper>
+                        <Group
+                            justify="space-between"
+                            gap="sm"
+                            px="sm"
+                            wrap="nowrap"
+                        >
+                            <IconMap />
+                            <Title order={6}>{currentProject?.name}</Title>
+                        </Group>
                         <Divider />
                         <Stack
                             gap="sm"
