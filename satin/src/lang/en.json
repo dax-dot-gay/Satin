@@ -38,6 +38,9 @@
       "error": "Unable to create project.",
       "existsError": "The named project already exists at that path.",
       "success": "Created project!"
+    },
+    "createFactory": {
+      "title": "New Factory Site"
     }
   },
   "actions": {

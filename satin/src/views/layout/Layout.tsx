@@ -23,7 +23,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useReady } from "../../contexts/readyState";
-import { ModalsProvider } from "@mantine/modals";
+import { ModalsProvider, openContextModal } from "@mantine/modals";
 import { modals } from "../../modals";
 
 export function AppLayout() {
@@ -100,6 +100,23 @@ export function AppLayout() {
                                 leftSection={<IconPlus size={20} />}
                                 style={{ flexGrow: 1 }}
                                 justify="space-between"
+                                onClick={() =>
+                                    openContextModal({
+                                        modal: "createFactory",
+                                        innerProps: {},
+                                        title: (
+                                            <Group gap="sm">
+                                                <IconPlus />
+                                                <Title order={3}>
+                                                    {t(
+                                                        "modals.createFactory.title"
+                                                    )}
+                                                </Title>
+                                            </Group>
+                                        ),
+                                        size: "lg",
+                                    })
+                                }
                             >
                                 {t("views.layout.nav.addFactory")}
                             </Button>
