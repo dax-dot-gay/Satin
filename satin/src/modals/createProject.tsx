@@ -20,7 +20,6 @@ import {
 } from "@tabler/icons-react";
 import { open } from "@tauri-apps/plugin-dialog";
 import { useCallback, useState } from "react";
-import { Database } from "tauri-plugin-polodb-api";
 import { v4 } from "uuid";
 import { Project } from "../types/project";
 import { DBSingleton } from "../types/backend/database";
@@ -30,6 +29,7 @@ import { path } from "@tauri-apps/api";
 import { useSetConfig } from "../contexts/config";
 import { camelCase } from "lodash";
 import { useNavigate } from "react-router-dom";
+import { useDatabases, useOpenDatabase } from "../contexts/database";
 
 export function CreateProjectModal({ context, id }: ContextModalProps<{}>) {
     const { t } = useTranslation();
@@ -43,6 +43,8 @@ export function CreateProjectModal({ context, id }: ContextModalProps<{}>) {
     const nav = useNavigate();
     const setCurrentProject = useSetConfig("currentProject");
     const [loading, setLoading] = useState(false);
+    const databases = useDatabases();
+    const openDatabase = useOpenDatabase();
 
     const createProject = useCallback(
         async (values: { name: string; description: string; path: string }) => {
@@ -61,8 +63,8 @@ export function CreateProjectModal({ context, id }: ContextModalProps<{}>) {
             }
             let id = v4();
             await mkdir(await path.join(values.path, camelCase(values.name)));
-            const database = await Database.open(
-                `project:${id}`,
+            const database = await openDatabase(
+                `project`,
                 await path.join(values.path, camelCase(values.name))
             );
             if (database) {
@@ -105,7 +107,7 @@ export function CreateProjectModal({ context, id }: ContextModalProps<{}>) {
                 return null;
             }
         },
-        [t]
+        [t, databases]
     );
 
     return (

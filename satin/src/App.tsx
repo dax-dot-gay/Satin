@@ -7,16 +7,22 @@ import { appRouter } from "./util/routes";
 import "./styles/index.scss";
 import { ReadinessProvider } from "./contexts/readyState";
 import { Notifications } from "@mantine/notifications";
+import { DatabaseProvider } from "./contexts/database";
 
 export function App() {
     return (
         <ReadinessProvider>
             <Localization>
                 <ConfigProvider>
-                    <MantineProvider theme={theme} defaultColorScheme="dark">
-                        <Notifications />
-                        <RouterProvider router={appRouter} />
-                    </MantineProvider>
+                    <DatabaseProvider>
+                        <MantineProvider
+                            theme={theme}
+                            defaultColorScheme="dark"
+                        >
+                            <Notifications />
+                            <RouterProvider router={appRouter} />
+                        </MantineProvider>
+                    </DatabaseProvider>
                 </ConfigProvider>
             </Localization>
         </ReadinessProvider>

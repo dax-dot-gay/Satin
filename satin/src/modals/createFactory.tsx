@@ -30,6 +30,14 @@ import {
 } from "react-zoom-pan-pinch";
 import { translateImageCoordinates } from "../util/satisfactoryMappings";
 import { useState } from "react";
+import {
+    emitDbEvent,
+    useCollection,
+    useDBOperations,
+} from "../contexts/database";
+import { Factory } from "../types/factory";
+import { v4 } from "uuid";
+import { showNotification } from "@mantine/notifications";
 
 function MapControls() {
     const controls = useControls();
@@ -75,7 +83,7 @@ export function CreateFactoryModal({ context, id }: ContextModalProps<{}>) {
         y: number;
     }>({ x: 0, y: 0 });
     const mappedPosition = translateImageCoordinates(form.values.location);
-    console.log(form.values);
+    const { insert } = useDBOperations<Factory>("project", "factories");
     return (
         <Stack gap="sm" className="create-factory-modal">
             <TextInput
@@ -180,6 +188,24 @@ export function CreateFactoryModal({ context, id }: ContextModalProps<{}>) {
                     leftSection={<IconPlus size={20} />}
                     justify="space-between"
                     disabled={form.values.name.length === 0}
+                    onClick={() =>
+                        insert({
+                            id: v4(),
+                            name: form.values.name,
+                            position: form.values.location,
+                        }).then((v) => {
+                            if (v) {
+                                context.closeContextModal(id);
+                            } else {
+                                showNotification({
+                                    color: "red",
+                                    icon: <IconX />,
+                                    title: t("notif.error"),
+                                    message: t("modals.createFactory.error"),
+                                });
+                            }
+                        })
+                    }
                 >
                     {t("actions.create")}
                 </Button>

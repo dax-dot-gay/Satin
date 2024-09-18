@@ -48,7 +48,8 @@
       "location": {
         "alt": "Simplified map of Satisfactory, in the style displayed in game.",
         "label": "Site Location"
-      }
+      },
+      "error": "Failed to add factory site."
     }
   },
   "actions": {

@@ -25,6 +25,7 @@ import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useReady } from "../../contexts/readyState";
 import { ModalsProvider, openContextModal } from "@mantine/modals";
 import { modals } from "../../modals";
+import { useQuery } from "../../contexts/database";
 
 export function AppLayout() {
     const ready = useReady();
@@ -37,13 +38,11 @@ export function AppLayout() {
     const { t } = useTranslation();
 
     useEffect(() => {
-        console.log(ready, currentProject);
         if (
             ready &&
             currentProject === null &&
             location.pathname !== "/no-project"
         ) {
-            console.log("SWITCHING");
             nav("/no-project");
         }
     }, [ready, currentProject?.path, location.pathname]);
@@ -51,6 +50,9 @@ export function AppLayout() {
     useEffect(() => {
         csHook.setColorScheme(colorScheme ?? "auto");
     }, [colorScheme]);
+
+    const factories = useQuery("project", "factories");
+    console.log(factories);
 
     return (
         <ModalsProvider modals={modals}>
