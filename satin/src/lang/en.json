@@ -40,7 +40,15 @@
       "success": "Created project!"
     },
     "createFactory": {
-      "title": "New Factory Site"
+      "title": "New Factory Site",
+      "name": {
+        "label": "Site Name",
+        "placeholder": "The Coal Hole"
+      },
+      "location": {
+        "alt": "Simplified map of Satisfactory, in the style displayed in game.",
+        "label": "Site Location"
+      }
     }
   },
   "actions": {

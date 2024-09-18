@@ -1,0 +1,34 @@
+.create-factory-modal {
+    .location-selection-wrapper {
+        width: 100%;
+    }
+    .location-selector {
+        display: inline-block;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        position: relative;
+
+        .react-transform-wrapper {
+            display: inline-block;
+            width: 100%;
+            height: 100%;
+            cursor: move;
+        }
+
+        .map-controls {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            z-index: 1000;
+        }
+
+        .selected-location {
+            position: absolute;
+            top: calc(50% - 11px);
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+        }
+    }
+}
