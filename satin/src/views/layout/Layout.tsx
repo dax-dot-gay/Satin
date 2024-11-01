@@ -12,10 +12,11 @@ import {
     useMantineColorScheme,
 } from "@mantine/core";
 import { useConfig } from "../../contexts/config";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
     IconBuildingFactory2,
     IconMap,
+    IconMapPin,
     IconMoonFilled,
     IconPlus,
     IconSunFilled,
@@ -26,6 +27,44 @@ import { useReady } from "../../contexts/readyState";
 import { ModalsProvider, openContextModal } from "@mantine/modals";
 import { modals } from "../../modals";
 import { useQuery } from "../../contexts/database";
+import { Factory } from "../../types/factory";
+
+function FactoryItem({
+    factory,
+    selected,
+    onSelect,
+}: {
+    factory: Factory;
+    selected: boolean;
+    onSelect: () => void;
+}) {
+    return (
+        <Paper
+            p="xs"
+            radius="sm"
+            shadow="xs"
+            className="paper-light factory-item"
+            style={{
+                border: `1px solid ${
+                    selected
+                        ? "var(--mantine-primary-color-filled)"
+                        : "var(--mantine-color-default-hover)"
+                }`,
+            }}
+            onClick={onSelect}
+        >
+            <Stack gap={2}>
+                <Text size="md">{factory.name}</Text>
+                <Group gap={4}>
+                    <IconMapPin size={16} />
+                    <Text size="xs" c="dimmed">
+                        {factory.position.x}, {factory.position.y}
+                    </Text>
+                </Group>
+            </Stack>
+        </Paper>
+    );
+}
 
 export function AppLayout() {
     const ready = useReady();
@@ -35,6 +74,7 @@ export function AppLayout() {
     const [currentProject, setCurrentProject] = useConfig("currentProject");
     const csHook = useMantineColorScheme();
     const currentScheme = useComputedColorScheme("dark");
+    const [selectedFactory, setSelectedFactory] = useState<string | null>(null);
     const { t } = useTranslation();
 
     useEffect(() => {
@@ -51,8 +91,13 @@ export function AppLayout() {
         csHook.setColorScheme(colorScheme ?? "auto");
     }, [colorScheme]);
 
-    const factories = useQuery("project", "factories");
-    console.log(factories);
+    const factories = useQuery<Factory, "many">("project", "factories");
+
+    useEffect(() => {
+        if (currentProject === null) {
+            setSelectedFactory(null);
+        }
+    }, [setSelectedFactory, currentProject]);
 
     return (
         <ModalsProvider modals={modals}>
@@ -95,7 +140,22 @@ export function AppLayout() {
                             gap="sm"
                             style={{ flexGrow: 1 }}
                             className="factory-list"
-                        ></Stack>
+                        >
+                            {factories.map((factory) => (
+                                <FactoryItem
+                                    factory={factory}
+                                    selected={selectedFactory === factory.id}
+                                    onSelect={() =>
+                                        setSelectedFactory(
+                                            selectedFactory === factory.id
+                                                ? null
+                                                : factory.id
+                                        )
+                                    }
+                                    key={factory.id}
+                                />
+                            ))}
+                        </Stack>
                         <Divider />
                         <Group gap="xs" wrap="nowrap">
                             <Button
