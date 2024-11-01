@@ -11,7 +11,7 @@ const MAP_BOUNDS = [
     },
 ];
 
-const IMAGE_SIZE = { x: 5000, y: 5000 };
+export const IMAGE_SIZE = { x: 5000, y: 5000 };
 
 export function translateImageCoordinates({ x, y }: { x: number; y: number }): {
     x: number;

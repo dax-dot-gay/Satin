@@ -69,19 +69,20 @@ export function useCollection<T extends object = any>(
         [setColl, database, collection]
     );
 
+    const onUpdateEvent = useCallback(
+        ({ key }: { key: string }) => {
+            if (key == database) {
+                updateCollection(ctx);
+            }
+        },
+        [database, ctx]
+    );
+
     useEffect(() => updateCollection(ctx), [ctx]);
 
-    useDatabaseEvent("opened", ({ key }) => {
-        if (key === database) {
-            updateCollection(ctx);
-        }
-    });
+    useDatabaseEvent("opened", onUpdateEvent);
 
-    useDatabaseEvent("closed", ({ key }) => {
-        if (key === database) {
-            updateCollection(ctx);
-        }
-    });
+    useDatabaseEvent("closed", onUpdateEvent);
 
     return coll;
 }
@@ -91,7 +92,7 @@ export function useDBOperations<T extends object = any>(
     collection: string
 ) {
     const coll = useCollection<T>(database, collection);
-    console.log(coll);
+    //console.log(coll);
     const opInsert = useCallback(
         async (...documents: T[]) => {
             if (coll && !coll.databaseObject.closed) {

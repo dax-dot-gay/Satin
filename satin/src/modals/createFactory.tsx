@@ -16,6 +16,7 @@ import { useForm } from "@mantine/form";
 import { ContextModalProps } from "@mantine/modals";
 import {
     IconBuildingFactory2,
+    IconFocus2,
     IconHome,
     IconMapPinFilled,
     IconMinus,
@@ -24,12 +25,16 @@ import {
 } from "@tabler/icons-react";
 import { useTranslation } from "react-i18next";
 import {
+    ReactZoomPanPinchRef,
     TransformComponent,
     TransformWrapper,
     useControls,
 } from "react-zoom-pan-pinch";
-import { translateImageCoordinates } from "../util/satisfactoryMappings";
-import { useState } from "react";
+import {
+    IMAGE_SIZE,
+    translateImageCoordinates,
+} from "../util/satisfactoryMappings";
+import { useCallback, useState } from "react";
 import {
     emitDbEvent,
     useCollection,
@@ -38,6 +43,8 @@ import {
 import { Factory } from "../types/factory";
 import { v4 } from "uuid";
 import { showNotification } from "@mantine/notifications";
+import { useDebouncedCallback } from "@mantine/hooks";
+import { clamp } from "lodash";
 
 function MapControls() {
     const controls = useControls();
@@ -83,7 +90,21 @@ export function CreateFactoryModal({ context, id }: ContextModalProps<{}>) {
         y: number;
     }>({ x: 0, y: 0 });
     const mappedPosition = translateImageCoordinates(form.values.location);
+    const [scale, setScale] = useState(0.2);
     const { insert } = useDBOperations<Factory>("project", "factories");
+
+    const onTransform = useDebouncedCallback((ref: ReactZoomPanPinchRef) => {
+        const transformedX =
+            (ref.state.positionX - startPosition.x) / ref.state.scale;
+        const transformedY =
+            (ref.state.positionY - startPosition.y) / ref.state.scale;
+        setScale(ref.state.scale);
+        form.setFieldValue("location", {
+            x: transformedX,
+            y: transformedY,
+        });
+    }, 10);
+
     return (
         <Stack gap="sm" className="create-factory-modal">
             <TextInput
@@ -100,17 +121,34 @@ export function CreateFactoryModal({ context, id }: ContextModalProps<{}>) {
                         maxScale={1.8}
                         centerOnInit
                         limitToBounds={false}
-                        onTransformed={(ref) =>
-                            form.setFieldValue("location", {
-                                x:
-                                    (ref.state.positionX - startPosition.x) /
-                                    ref.state.scale,
-                                y:
-                                    (ref.state.positionY - startPosition.y) /
-                                    ref.state.scale,
-                            })
-                        }
                         panning={{ velocityDisabled: true }}
+                        onTransformed={(ref) => {
+                            const transformedX =
+                                (ref.state.positionX - startPosition.x) /
+                                ref.state.scale;
+                            const transformedY =
+                                (ref.state.positionY - startPosition.y) /
+                                ref.state.scale;
+
+                            if (
+                                clamp(transformedX, -IMAGE_SIZE.x, 0) !=
+                                    transformedX ||
+                                clamp(transformedY, -IMAGE_SIZE.y, 0) !=
+                                    transformedY
+                            ) {
+                                ref.setTransform(
+                                    clamp(transformedX, -IMAGE_SIZE.x, 0) *
+                                        ref.state.scale +
+                                        startPosition.x,
+                                    clamp(transformedY, -IMAGE_SIZE.y, 0) *
+                                        ref.state.scale +
+                                        startPosition.y,
+                                    ref.state.scale,
+                                    0
+                                );
+                            }
+                            onTransform(ref);
+                        }}
                         onInit={(ref) => {
                             form.setFieldValue("location", {
                                 x: 0,
@@ -126,7 +164,7 @@ export function CreateFactoryModal({ context, id }: ContextModalProps<{}>) {
                             return (
                                 <>
                                     <MapControls />
-                                    <IconMapPinFilled
+                                    <IconFocus2
                                         className="selected-location"
                                         color={theme.colors.dark[6]}
                                     />
